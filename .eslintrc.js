@@ -7,7 +7,7 @@ module.exports = {
     parserOptions: {
         ecmaVersion: 12,
     },
-    rule: {
+    rules: {
         'array-bracket-newline': [
             'error',
             {minItems: 2}
