@@ -1,4 +1,5 @@
 const User = require('../database/User');
+const passwordService = require('../service/password.service');
 
 module.exports = {
     getUsers: async (req, res) => {
@@ -22,7 +23,10 @@ module.exports = {
 
     createUser: async (req, res) => {
         try {
-            const newUser = await User.create(req.body);
+            const hashedPassword = await passwordService.hash(req.body.password);
+            console.log(hashedPassword);
+
+            const newUser = await User.create({...req.body, password: hashedPassword});
             console.log(newUser);
             res.json(newUser);
         } catch (e) {
