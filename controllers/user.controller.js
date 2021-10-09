@@ -28,6 +28,25 @@ module.exports = {
         } catch (e) {
             throw new Error(e.message);
         }
+    },
+
+    updateUser: async (req, res) => {
+        try {
+            const {name} = req.body;
+            const editUser = await User.findOneAndUpdate(name);
+            res.json(editUser);
+        } catch (e) {
+            throw new Error(e.message);
+        }
+    },
+
+    deleteUser: (req, res) => {
+        try {
+            const user = User.findOneAndDelete(req.body);
+            res.json(`user ${user} deleted`);
+        } catch (e) {
+            throw new Error(e.message);
+        }
     }
 };
 

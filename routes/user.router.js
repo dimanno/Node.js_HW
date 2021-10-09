@@ -4,8 +4,8 @@ const userController = require('../controllers/user.controller');
 const usersMiddleware = require('../middlewares/users.middleware');
 
 router.get('/', userController.getUser);
-router.post('/', userController.createUser);
+router.post('/', usersMiddleware.createUserMiddleware, userController.createUser);
 
-router.get('/:user_id', usersMiddleware.userIdMiddleware, userController.getUser);
+router.get('/:user_id',userController.getUser);
 
 module.exports = router;
