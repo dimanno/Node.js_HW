@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const authUserController = require('../controllers/login.controller');
-const loginMiddleware = require('../middlewares/login.middleware');
 
-router.post('/auth', loginMiddleware.loginMiddleware, authUserController.authUserController);
+const {authUserController} = require('../controllers/userLogin.controller');
+const {loginMiddleware, isLoginValid} = require('../middlewares/login.middleware');
+
+router.post('/auth', isLoginValid, loginMiddleware, authUserController);

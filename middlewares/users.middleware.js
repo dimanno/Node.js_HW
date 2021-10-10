@@ -18,7 +18,7 @@ module.exports = {
         }
     },
 
-    getUserById: (req, res, next) => {
+    isUserExist: (req, res, next) => {
         try {
             const {user_id} = req.body;
             const user = User.findById(user_id);
@@ -26,6 +26,8 @@ module.exports = {
             if (!user) {
                 throw new Error('user does not exist with this ID');
             }
+
+            req.body = user;
             next();
         } catch (e) {
             res.json(e.message);

@@ -1,12 +1,15 @@
 const User = require('../database/User');
 const passwordService = require('../service/password.service');
-const userUtil = require('../util/user.util');
+const {userNormalizator} = require('../util/user.util');
 
 module.exports = {
     getUsers: async (req, res) => {
         try {
-            const users = await User.find(req.body);
-            res.json(users);
+            const users = await User.find({}).lean();
+
+            const newUsers = users.map(user => userNormalizator(user));
+
+            res.json(newUsers);
         } catch (e) {
             throw new Error(e.message);
         }
@@ -14,12 +17,8 @@ module.exports = {
 
     getUser: async (req, res) => {
         try {
-            const {user_id} = req.body;
-            let userById = await User.findById(user_id).lean();
-
-            userById = userUtil.userNormalizator(user_id);
-
-            res.json(userById);
+            const user = await req.user;
+            res.json(user);
         } catch (e) {
             throw new Error(e.message);
         }
@@ -41,17 +40,20 @@ module.exports = {
 
     updateUser: async (req, res) => {
         try {
-            const {user_id, name} = req.body;
-            const editUser = await User.findOneAndUpdate({name});
+            const {user_id} = req.params;
+            const {name} = req.body;
+
+            const editUser = await User.updateOne({user_id}, {$set: {name}});
             res.json(editUser);
         } catch (e) {
             throw new Error(e.message);
         }
     },
 
-    deleteUser: (req, res) => {
+    deleteUser: async (req, res) => {
         try {
-            const user = User.findOneAndDelete(req.body);
+            const {user_id} = req.params;
+            const user = await User.deleteOne({id: user_id});
             res.json(`user ${user} deleted`);
         } catch (e) {
             throw new Error(e.message);
