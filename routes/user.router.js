@@ -4,7 +4,9 @@ const userController = require('../controllers/user.controller');
 const usersMiddleware = require('../middlewares/users.middleware');
 
 router.get('/', userController.getUser);
-router.post('/', usersMiddleware.createUserMiddleware, userController.createUser);
+router.post('/', usersMiddleware.isUserBodyValid,
+    usersMiddleware.createUserMiddleware,
+    userController.createUser);
 
 router.get('/:user_id',userController.getUser);
 
