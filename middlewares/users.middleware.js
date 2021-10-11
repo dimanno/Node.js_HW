@@ -22,11 +22,9 @@ module.exports = {
         try {
             const {user_id} = req.params;
             const user = User.find({_id: user_id});
-
             if (!user) {
                 throw new Error('user does not exist with this ID');
             }
-
             req.body = user;
             next();
         } catch (e) {
