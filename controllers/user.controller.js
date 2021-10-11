@@ -19,6 +19,7 @@ module.exports = {
         try {
             const {user_id} = req.body;
             const user = await User.findById(user_id).select('-password');
+
             await res.json(user);
         } catch (e) {
             throw new Error(e.message);
@@ -43,6 +44,7 @@ module.exports = {
             const {name} = req.body;
 
             await User.findByIdAndUpdate(user_id, {$set: {name}});
+
             res.json('Name was changed');
         } catch (e) {
             throw new Error(e.message);
@@ -53,6 +55,7 @@ module.exports = {
         try {
             const {user_id} = req.params;
             const user = await User.findByIdAndDelete(user_id);
+
             res.json(`user ${user.name} deleted`);
         } catch (e) {
             throw new Error(e.message);
