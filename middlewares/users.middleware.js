@@ -1,6 +1,6 @@
 const User = require('../database/User');
 
-const {createUserValidator} = require('../validators/user.validator');
+const {createUserValidator, updateUserValidator} = require('../validators/user.validator');
 
 module.exports = {
     createUserMiddleware: async (req, res, next) => {
@@ -18,10 +18,10 @@ module.exports = {
         }
     },
 
-    isUserExist: (req, res, next) => {
+    isUserExist: async (req, res, next) => {
         try {
             const {user_id} = req.params;
-            const user = User.find({_id: user_id});
+            const user = await User.findById(user_id);
             if (!user) {
                 throw new Error('user does not exist with this ID');
             }
@@ -51,13 +51,13 @@ module.exports = {
     isUpdateDataValid: (req, res, next) => {
         try {
             const {name, email, password} = req.body;
-            const {error, value} = createUserValidator.validate({name, email, password});
+            const {error, value} = updateUserValidator.validate({name});
 
             if (error) {
                 throw new Error(error.details[0].message);
             }
 
-            if (password) {
+            if (password || email) {
                 throw new Error('For change email qr password you need administrator permission');
             }
 

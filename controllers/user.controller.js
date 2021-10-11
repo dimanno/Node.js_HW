@@ -17,8 +17,7 @@ module.exports = {
 
     getUser: async (req, res) => {
         try {
-            const {user_id} = req.body;
-            const user = await User.findById(user_id).select('-password');
+            const user = userNormalizator(req.body);
             await res.json(user);
         } catch (e) {
             throw new Error(e.message);
