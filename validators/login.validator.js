@@ -1,14 +1,13 @@
 const Joi = require('joi');
 
-const {PASSWORD_REGEXP} = require('../config/constants/regular.expressions');
+const {PASSWORD_REGEXP, EMAIL_REGEXP} = require('../config/constants/regular.expressions');
 
 const userLoginValidator = Joi.object({
-    username: Joi
+    email: Joi
         .string()
-        .alphanum()
-        .min(2)
-        .max(20)
-        .required(),
+        .max(30)
+        .required()
+        .regex(EMAIL_REGEXP),
     password: Joi
         .string()
         .regex(PASSWORD_REGEXP)

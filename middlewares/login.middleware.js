@@ -7,7 +7,7 @@ module.exports = {
     loginMiddleware: async (req, res, next) => {
         try {
             const {email, password} = req.body;
-            const user = await User.findOne({email});
+            const user = await User.findOne({email}).select(+password);
 
             if (!user) {
                 res.json('wrong login or password');

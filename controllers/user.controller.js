@@ -17,8 +17,9 @@ module.exports = {
 
     getUser: async (req, res) => {
         try {
-            const user = await req.user;
-            res.json(user);
+            const {user_id} = req.body;
+            const user = await User.findById(user_id).select('-password');
+            await res.json(user);
         } catch (e) {
             throw new Error(e.message);
         }
@@ -26,13 +27,11 @@ module.exports = {
 
     createUser: async (req, res) => {
         try {
-            const {password, email} = req.body;
+            const {password, email, name} = req.body;
             const hashedPassword = await passwordService.hash(password);
-            console.log(hashedPassword);
 
             await User.create({...req.body, password: hashedPassword});
-            console.log(email);
-            res.json(`User - ${email} created successfully`);
+            res.json(`User - ${name} with ${email} created successfully`);
         } catch (e) {
             throw new Error(e.message);
         }
@@ -43,8 +42,8 @@ module.exports = {
             const {user_id} = req.params;
             const {name} = req.body;
 
-            const editUser = await User.updateOne({user_id}, {$set: {name}});
-            res.json(editUser);
+            await User.findByIdAndUpdate(user_id, {$set: {name}});
+            res.json('Name was changed');
         } catch (e) {
             throw new Error(e.message);
         }
@@ -53,8 +52,8 @@ module.exports = {
     deleteUser: async (req, res) => {
         try {
             const {user_id} = req.params;
-            const user = await User.deleteOne({id: user_id});
-            res.json(`user ${user} deleted`);
+            const user = await User.findByIdAndDelete(user_id);
+            res.json(`user ${user.name} deleted`);
         } catch (e) {
             throw new Error(e.message);
         }
