@@ -1,23 +1,17 @@
-const User = require('../database/User');
-
 const {compare} = require('../service/password.service');
-const {userLoginValidator} = require('../validators/login.validator');
+const {loginValidator: {userLoginValidator}} = require('../validators');
 
 module.exports = {
-    loginMiddleware: async (req, res, next) => {
+
+    IsPasswordMatched: async (req, res, next) => {
         try {
-            const {email, password} = req.body;
-            const user = await User.findOne({email}).select(+password);
-
-            if (!user) {
-                res.json('wrong login or password');
-            }
-
-            await compare(password, user.password);
+            const {password} = req.body;
+            const {password: hashPassword} = req.user;
+            await compare(password, hashPassword);
 
             next();
         } catch (e) {
-            throw new Error(e.message);
+            next(e);
         }
     },
 
@@ -29,10 +23,10 @@ module.exports = {
                 throw new Error('wrong login or password');
             }
 
-            req.body = value;
+            req.body =value;
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
-    }
+    },
 };

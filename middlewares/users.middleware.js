@@ -1,6 +1,6 @@
 const User = require('../database/User');
 
-const {createUserValidator, updateUserValidator} = require('../validators/user.validator');
+const {userValidator: {createUserValidator, updateUserValidator}} = require('../validators');
 
 module.exports = {
     createUserMiddleware: async (req, res, next) => {
@@ -14,7 +14,27 @@ module.exports = {
 
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
+        }
+    },
+
+    isUserPresentByEmail: async (req, res, next) => {
+        try {
+            const userByEmail = await User
+                .findOne({email: req.body.email})
+                .select('+password')
+                .lean();
+
+            if (!userByEmail) {
+                return next ({
+                    message: 'Wrong email or password',
+                    status: 404
+                });
+            }
+            req.user = userByEmail;
+            next();
+        } catch (e) {
+            next(e);
         }
     },
 
@@ -22,13 +42,17 @@ module.exports = {
         try {
             const {user_id} = req.params;
             const user = await User.findById(user_id);
+            console.log(user);
             if (!user) {
-                throw new Error('user does not exist with this ID');
+                return next ({
+                    message: 'user does not exist',
+                    status: 404
+                });
             }
             req.body = user;
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     },
 
@@ -40,11 +64,10 @@ module.exports = {
                 throw new Error(error.details[0].message);
             }
 
-            req.body =value;
-
+            req.body = value;
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     },
 
@@ -64,7 +87,7 @@ module.exports = {
             req.body = value;
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     }
 };

@@ -3,7 +3,7 @@ const passwordService = require('../service/password.service');
 const {userNormalizator} = require('../util/user.util');
 
 module.exports = {
-    getUsers: async (req, res) => {
+    getUsers: async (req, res, next) => {
         try {
             const users = await User.find({}).lean();
 
@@ -11,20 +11,20 @@ module.exports = {
 
             res.json(newUsers);
         } catch (e) {
-            throw new Error(e.message);
+            next(e);
         }
     },
 
-    getUser: async (req, res) => {
+    getUser: async (req, res, next) => {
         try {
             const user = userNormalizator(req.body);
             await res.json(user);
         } catch (e) {
-            throw new Error(e.message);
+            next(e);
         }
     },
 
-    createUser: async (req, res) => {
+    createUser: async (req, res, next) => {
         try {
             const {password, email, name} = req.body;
             const hashedPassword = await passwordService.hash(password);
@@ -32,29 +32,30 @@ module.exports = {
             await User.create({...req.body, password: hashedPassword});
             res.json(`User - ${name} with ${email} created successfully`);
         } catch (e) {
-            throw new Error(e.message);
+            next(e);
         }
     },
 
-    updateUser: async (req, res) => {
+    updateUser: async (req, res, next) => {
         try {
             const {user_id} = req.params;
             const {name} = req.body;
-
-            await User.findByIdAndUpdate(user_id, {$set: {name}});
+            await User.findByIdAndUpdate({id: user_id}, {$set: {name}});
+            console.log(user_id);
+            console.log(name);
             res.json('Name was changed');
         } catch (e) {
-            throw new Error(e.message);
+            next(e);
         }
     },
 
-    deleteUser: async (req, res) => {
+    deleteUser: async (req, res, next) => {
         try {
             const {user_id} = req.params;
             const user = await User.findByIdAndDelete(user_id);
             res.json(`user ${user.name} deleted`);
         } catch (e) {
-            throw new Error(e.message);
+            next(e);
         }
     }
 };

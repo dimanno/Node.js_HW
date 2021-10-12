@@ -1,10 +1,19 @@
 
 module.exports = {
-    authUserController: (req, res) => {
+    login: (req, res, next) => {
         try {
-            res.json(`Hello ${req.body.email}`);
+            const userNormalize = req.user;
+            res.json(`Hello ${userNormalize.name}`);
         } catch (e) {
-            throw new Error(e.message);
+            next(e);
+        }
+    },
+
+    logout: async (req, res, next) => {
+        try {
+            await res.json(`Hello ${req.body.email}`);
+        } catch (e) {
+            next(e);
         }
     }
 };
