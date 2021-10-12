@@ -20,7 +20,10 @@ module.exports = {
             const {error, value} = userLoginValidator.validate(req.body);
 
             if (error) {
-                throw new Error('wrong login or password');
+                return next({
+                    message: 'wrong login or password',
+                    status: 404
+                });
             }
 
             req.body =value;

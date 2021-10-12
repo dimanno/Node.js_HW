@@ -9,7 +9,10 @@ module.exports = {
             const userByEmail = await User.findOne({email});
 
             if (userByEmail) {
-                throw new Error('email already exist');
+                return next({
+                    message: 'email already exist',
+                    status: 418
+                });
             }
 
             next();
@@ -81,7 +84,10 @@ module.exports = {
             }
 
             if (password || email) {
-                throw new Error('For change email qr password you need administrator permission');
+                return next({
+                    message: 'For change email qr password you need administrator permission',
+                    status: 418
+                });
             }
 
             req.body = value;
