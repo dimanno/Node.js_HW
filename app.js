@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use('/users', userRouter);
-app.use('/login', userLoginRouter);
+app.use('/auth', userLoginRouter);
 
 app.listen(PORT, () => {
     console.log(`app.listen PORT ${PORT}`);

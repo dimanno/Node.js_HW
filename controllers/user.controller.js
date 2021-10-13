@@ -42,7 +42,8 @@ module.exports = {
             const {name} = req.body;
 
             await User.findByIdAndUpdate(user_id, {$set: {name}});
-            res.json('Name was changed');
+
+            res.json(`User ID: ${user_id} was updated with name - ${name}`);
         } catch (e) {
             throw new Error(e.message);
         }

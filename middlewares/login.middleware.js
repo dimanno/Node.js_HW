@@ -1,5 +1,4 @@
 const User = require('../database/User');
-
 const {compare} = require('../service/password.service');
 const {userLoginValidator} = require('../validators/login.validator');
 

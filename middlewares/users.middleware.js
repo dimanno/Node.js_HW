@@ -1,5 +1,4 @@
 const User = require('../database/User');
-
 const {createUserValidator, updateUserValidator} = require('../validators/user.validator');
 
 module.exports = {
@@ -21,10 +20,12 @@ module.exports = {
     isUserExist: async (req, res, next) => {
         try {
             const {user_id} = req.params;
-            const user = await User.findById(user_id);
+            const user = await User.findById(user_id).lean();
+
             if (!user) {
                 throw new Error('user does not exist with this ID');
             }
+
             req.body = user;
             next();
         } catch (e) {
