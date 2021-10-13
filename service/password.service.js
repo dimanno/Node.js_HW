@@ -9,7 +9,7 @@ module.exports = {
 
         if (!isPasswordMatched) {
 
-            throw new ErrorHandler('Wrong email or password', 404);
+            throw new ErrorHandler('wrong email or password', 404);
         }
     }
 };

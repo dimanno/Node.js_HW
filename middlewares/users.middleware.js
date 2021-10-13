@@ -1,5 +1,4 @@
 const User = require('../database/User');
-
 const {userValidator: {createUserValidator, updateUserValidator}} = require('../validators');
 const ErrorHandler = require("../errors/errorHendler");
 
@@ -35,6 +34,7 @@ module.exports = {
                     status: 404
                 });
             }
+
             req.user = userByEmail;
             next();
         } catch (e) {
@@ -45,8 +45,7 @@ module.exports = {
     isUserExist: async (req, res, next) => {
         try {
             const {user_id} = req.params;
-            const user = await User.findById(user_id);
-            console.log(user);
+            const user = await User.findById(user_id).lean();
 
             if (!user) {
                 return next ({
@@ -56,6 +55,7 @@ module.exports = {
             }
 
             req.body = user;
+
             next();
         } catch (e) {
             next(e);

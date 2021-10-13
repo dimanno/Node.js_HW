@@ -40,10 +40,12 @@ module.exports = {
         try {
             const {user_id} = req.params;
             const {name} = req.body;
-            await User.findByIdAndUpdate({id: user_id}, {$set: {name}});
+
+            await User.findByIdAndUpdate(user_id, {$set: {name}});
             console.log(user_id);
             console.log(name);
-            res.json('Name was changed');
+
+            res.json(`User ID ${user_id} was updated with name ${name}`);
         } catch (e) {
             next(e);
         }
