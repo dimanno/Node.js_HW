@@ -1,6 +1,7 @@
 const User = require('../database/User');
 
 const {userValidator: {createUserValidator, updateUserValidator}} = require('../validators');
+const ErrorHandler = require("../errors/errorHendler");
 
 module.exports = {
     createUserMiddleware: async (req, res, next) => {
@@ -30,7 +31,7 @@ module.exports = {
 
             if (!userByEmail) {
                 return next ({
-                    message: 'Wrong email or password',
+                    message: 'wrong email or password',
                     status: 404
                 });
             }
@@ -46,12 +47,14 @@ module.exports = {
             const {user_id} = req.params;
             const user = await User.findById(user_id);
             console.log(user);
+
             if (!user) {
                 return next ({
                     message: 'user does not exist',
                     status: 404
                 });
             }
+
             req.body = user;
             next();
         } catch (e) {
@@ -64,7 +67,7 @@ module.exports = {
             const {error, value} = createUserValidator.validate(req.body);
 
             if (error) {
-                throw new Error(error.details[0].message);
+                throw new ErrorHandler(error.details[0].message, 400);
             }
 
             req.body = value;
@@ -80,13 +83,13 @@ module.exports = {
             const {error, value} = updateUserValidator.validate({name});
 
             if (error) {
-                throw new Error(error.details[0].message);
+                throw new ErrorHandler(error.details[0].message, 400);
             }
 
             if (password || email) {
                 return next({
                     message: 'For change email qr password you need administrator permission',
-                    status: 418
+                    status: 403
                 });
             }
 
