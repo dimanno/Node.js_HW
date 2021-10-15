@@ -1,5 +1,5 @@
 const User = require('../database/User');
-const {userValidator: {createUserValidator, updateUserValidator}} = require('../validators');
+const {userValidator: {updateUserValidator}} = require('../validators');
 const ErrorHandler = require("../errors/errorHendler");
 
 module.exports = {
@@ -62,20 +62,20 @@ module.exports = {
         }
     },
 
-    isUserBodyValid: (req, res, next) => {
-        try {
-            const {error, value} = createUserValidator.validate(req.body);
-
-            if (error) {
-                throw new ErrorHandler(error.details[0].message, 400);
-            }
-
-            req.body = value;
-            next();
-        } catch (e) {
-            next(e);
-        }
-    },
+    // isUserBodyValid: (req, res, next) => {
+    //     try {
+    //         const {error, value} = createUserValidator.validate(req.body);
+    //
+    //         if (error) {
+    //             throw new ErrorHandler(error.details[0].message, 400);
+    //         }
+    //
+    //         req.body = value;
+    //         next();
+    //     } catch (e) {
+    //         next(e);
+    //     }
+    // },
 
     isUpdateDataValid: (req, res, next) => {
         try {
@@ -95,6 +95,19 @@ module.exports = {
 
             req.body = value;
             next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    checkUserRole: (arrayRoles = []) => (req, res, next) => {
+        try {
+            const { role } = req.user;
+
+            if (!arrayRoles.includes(role)) {
+                throw new ErrorHandler('Access denied');
+            }
+
         } catch (e) {
             next(e);
         }
