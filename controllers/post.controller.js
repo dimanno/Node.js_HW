@@ -1,12 +1,13 @@
 const Post = require('../database/Post');
+const {responseStatusCode: {CREATED}} = require("../config/constants");
 
 module.exports = {
     addPost: async (req, res, next) => {
         try {
             const {title, body} = req.body;
-            const post = await Post.create({title, body});
+            await Post.create({title, body});
 
-            res.json(`Post ${post.title} created successfully`);
+            res.sendStatus(CREATED);
         } catch (e) {
             next(e);
         }

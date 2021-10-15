@@ -1,6 +1,7 @@
 const User = require('../database/User');
 const {userValidator: {updateUserValidator}} = require('../validators');
 const ErrorHandler = require("../errors/errorHendler");
+const {responseStatusCode} = require('../config/constants');
 
 module.exports = {
     createUserMiddleware: async (req, res, next) => {
@@ -11,7 +12,7 @@ module.exports = {
             if (userByEmail) {
                 return next({
                     message: 'email already exist',
-                    status: 418
+                    status: responseStatusCode.FORBIDDEN
                 });
             }
 
@@ -31,7 +32,7 @@ module.exports = {
             if (!userByEmail) {
                 return next ({
                     message: 'wrong email or password',
-                    status: 404
+                    status: responseStatusCode.NOT_FOUND
                 });
             }
 
@@ -50,7 +51,7 @@ module.exports = {
             if (!user) {
                 return next ({
                     message: 'user does not exist',
-                    status: 404
+                    status: responseStatusCode.NOT_FOUND
                 });
             }
 
@@ -62,34 +63,19 @@ module.exports = {
         }
     },
 
-    // isUserBodyValid: (req, res, next) => {
-    //     try {
-    //         const {error, value} = createUserValidator.validate(req.body);
-    //
-    //         if (error) {
-    //             throw new ErrorHandler(error.details[0].message, 400);
-    //         }
-    //
-    //         req.body = value;
-    //         next();
-    //     } catch (e) {
-    //         next(e);
-    //     }
-    // },
-
     isUpdateDataValid: (req, res, next) => {
         try {
             const {name, email, password} = req.body;
             const {error, value} = updateUserValidator.validate({name});
 
             if (error) {
-                throw new ErrorHandler(error.details[0].message, 400);
+                throw new ErrorHandler(error.details[0].message, responseStatusCode.BAD_REQUEST);
             }
 
             if (password || email) {
                 return next({
                     message: 'For change email qr password you need administrator permission',
-                    status: 403
+                    status: responseStatusCode.FORBIDDEN
                 });
             }
 
@@ -102,10 +88,10 @@ module.exports = {
 
     checkUserRole: (arrayRoles = []) => (req, res, next) => {
         try {
-            const { role } = req.user;
+            const {role} = req.body;
 
             if (!arrayRoles.includes(role)) {
-                throw new ErrorHandler('Access denied');
+                throw new ErrorHandler('Access denied', responseStatusCode.FORBIDDEN);
             }
 
         } catch (e) {
