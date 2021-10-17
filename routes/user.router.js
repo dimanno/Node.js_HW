@@ -15,6 +15,6 @@ router.put('/:user_id',
     usersMiddleware.isUpdateDataValid,
     usersMiddleware.isUserExist,
     userController.updateUser);
-router.delete('/:user_id', usersMiddleware.isUserExist, userController.deleteUser);
+router.delete('/:user_id', userController.deleteUser);
 
 module.exports = router;

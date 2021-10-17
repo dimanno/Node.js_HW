@@ -47,7 +47,7 @@ module.exports = {
 
             await User.updateOne({_id: user_id}, {$set: {name}});
 
-            res.sendStatus(responseStatusCode.CREATED).json(messagesResponse.UPDATE_USER);
+            res.status(responseStatusCode.CREATED).json(messagesResponse.UPDATE_USER);
         } catch (e) {
             next(e);
         }
@@ -58,7 +58,7 @@ module.exports = {
             const {user_id} = req.params;
             await User.findByIdAndDelete(user_id);
 
-            res.sendStatus(responseStatusCode.NO_DATA).json(messagesResponse.USER_DELETED);
+            res.sendStatus(responseStatusCode.NO_DATA);
         } catch (e) {
             next(e);
         }
