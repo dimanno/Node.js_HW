@@ -1,14 +1,15 @@
 const router = require('express').Router();
 
 const {postController} = require('../controllers');
-const {dataValidMiddleware, usersMiddleware} = require('../middlewares');
+const {dataValidMiddleware, usersMiddleware, loginMiddleware} = require('../middlewares');
 const {postValidator} = require('../validators/');
 const {userRoles: {USER, MANAGER}} = require('../config/constants');
 
 
 router.post('/',
-    usersMiddleware.checkUserRole(USER, MANAGER),
-    dataValidMiddleware.isDataValid(postValidator),
+    loginMiddleware.checkAccessToken,
+    // usersMiddleware.checkUserRole(USER, MANAGER),
+    // dataValidMiddleware.isDataValid(postValidator),
     postController.addPost);
 router.get('/', postController.getPosts);
 

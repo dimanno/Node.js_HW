@@ -2,6 +2,9 @@ const {compare} = require('../service/password.service');
 const {loginValidator: {userLoginValidator}} = require('../validators');
 const ErrorHandler = require('../errors/errorHendler');
 const {messagesResponse, responseStatusCode} = require('../config/constants');
+const {jwtService} = require('../service');
+const {INVALID_CLIENT} = require('../config/constants/responsStatusCode');
+const {O_Auth} = require('../database');
 
 module.exports = {
 
@@ -31,4 +34,29 @@ module.exports = {
             next(e);
         }
     },
+    checkAccessToken: async (req, res, next) => {
+        try {
+            const token = req.get('authorization');
+            console.log(token);
+
+            if (!token) {
+                throw new ErrorHandler('invalid token', INVALID_CLIENT);
+            }
+
+            await jwtService.verifyToken(token);
+
+            const tokenResponse = await O_Auth.findOne({access_token: token})
+                .populate('user_id');
+
+            if (!tokenResponse) {
+                throw new ErrorHandler('invalid token', INVALID_CLIENT);
+            }
+
+            req.user = tokenResponse.user_id;
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    }
 };

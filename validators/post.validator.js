@@ -1,4 +1,4 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
 const addPostValidator = Joi.object({
     title: Joi
@@ -12,7 +12,7 @@ const addPostValidator = Joi.object({
         .min(20)
         .max(9000)
         .trim()
-        .required()
+        .required(),
 });
 
 module.exports = addPostValidator;

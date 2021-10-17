@@ -1,10 +1,24 @@
-const {responseStatusCode, messagesResponse} = require('../config/constants');
+const {jwtService} = require('../service');
+const {userNormalizator} = require('../util/user.util');
+const {O_Auth} = require('../database');
 
 module.exports = {
-    login: (req, res, next) => {
+    login: async (req, res, next) => {
         try {
-            const userNormalize = req.user;
-            res.json(messagesResponse.SUCCESSFUL_AUTH(userNormalize.name)).status(responseStatusCode.CREATED);
+            const userNormalize = userNormalizator(req.user);
+
+            const tokenPair = jwtService.generateTokenPair();
+
+            await O_Auth.create({
+                ...tokenPair,
+                user_id: userNormalize._id
+            });
+
+            res.json({
+                user: userNormalize,
+                ...tokenPair
+            });
+
         } catch (e) {
             next(e);
         }

@@ -6,5 +6,5 @@ module.exports = {
     ADD_USER: 'User is added',
     UPDATE_USER: 'User is updated',
     USER_DELETED: 'User is delete',
-    SUCCESSFUL_AUTH: (email) => `Hello ${email}`
+    SUCCESSFUL_AUTH: (email) => `Hello ${email}`,
 };
