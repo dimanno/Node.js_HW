@@ -1,7 +1,8 @@
 const User = require('../database/User');
 const passwordService = require('../service/password.service');
 const {userNormalizator} = require('../util/user.util');
-const {responseStatusCode: {CREATED, NO_DATA}} = require('../config/constants');
+const {responseStatusCode, messagesResponse} = require('../config/constants');
+const {} = require('../config/constants');
 
 module.exports = {
     getUsers: async (req, res, next) => {
@@ -30,9 +31,10 @@ module.exports = {
             const {password} = req.body;
             const hashedPassword = await passwordService.hash(password);
 
-            await User.create({...req.body, password: hashedPassword});
-            res.sendStatus(CREATED);
-            // res.json(`User - ${name} with ${email} created successfully`);
+            const newUser = await User.create({...req.body, password: hashedPassword});
+            const userNormalise = userNormalizator(newUser.toJSON());
+
+            res.json(userNormalise);
         } catch (e) {
             next(e);
         }
@@ -43,11 +45,9 @@ module.exports = {
             const {user_id} = req.params;
             const {name} = req.body;
 
-            await User.findByIdAndUpdate(user_id, {set: {name}});
-            console.log(user_id);
+            await User.updateOne({_id: user_id}, {$set: {name}});
 
-            // res.json(`User ID ${user_id} was updated with name ${name}`);
-            res.sendStatus(CREATED);
+            res.sendStatus(responseStatusCode.CREATED).json(messagesResponse.UPDATE_USER);
         } catch (e) {
             next(e);
         }
@@ -56,14 +56,11 @@ module.exports = {
     deleteUser: async (req, res, next) => {
         try {
             const {user_id} = req.params;
-            const user = await User.findByIdAndDelete(user_id);
+            await User.findByIdAndDelete(user_id);
 
-            res.sendStatus(NO_DATA);
-            res.sendStatus(`user ${user.name} deleted`);
+            res.sendStatus(responseStatusCode.NO_DATA).json(messagesResponse.USER_DELETED);
         } catch (e) {
             next(e);
         }
     }
 };
-
-

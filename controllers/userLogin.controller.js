@@ -1,9 +1,10 @@
+const {responseStatusCode, messagesResponse} = require('../config/constants');
 
 module.exports = {
     login: (req, res, next) => {
         try {
             const userNormalize = req.user;
-            res.json(`Hello ${userNormalize.name}`);
+            res.json(messagesResponse.SUCCESSFUL_AUTH(userNormalize.name)).status(responseStatusCode.CREATED);
         } catch (e) {
             next(e);
         }

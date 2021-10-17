@@ -1,5 +1,7 @@
 const {compare} = require('../service/password.service');
 const {loginValidator: {userLoginValidator}} = require('../validators');
+const ErrorHandler = require('../errors/errorHendler');
+const {messagesResponse, responseStatusCode} = require('../config/constants');
 
 module.exports = {
 
@@ -20,10 +22,7 @@ module.exports = {
             const {error, value} = userLoginValidator.validate(req.body);
 
             if (error) {
-                return next({
-                    message: 'wrong login or password',
-                    status: 404
-                });
+                throw new ErrorHandler(messagesResponse.WRONG_LOGIN_DATA, responseStatusCode.NOT_FOUND);
             }
 
             req.body =value;

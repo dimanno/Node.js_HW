@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
-const ErrorHandler = require("../errors/errorHendler");
+const ErrorHandler = require('../errors/errorHendler');
+const {messagesResponse, responseStatusCode} = require('../config/constants');
 
 module.exports = {
     hash: (password) => bcrypt.hash(password, 10),
@@ -9,7 +10,7 @@ module.exports = {
 
         if (!isPasswordMatched) {
 
-            throw new ErrorHandler('wrong email or password', 404);
+            throw new ErrorHandler(messagesResponse.WRONG_LOGIN_DATA, responseStatusCode.NOT_FOUND);
         }
     }
 };
