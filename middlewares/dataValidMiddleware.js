@@ -1,4 +1,4 @@
-const ErrorHandler = require("../errors/errorHendler");
+const ErrorHandler = require('../errors/errorHendler');
 
 module.exports = {
     isDataValid: (validator) => (req, res, next) => {
