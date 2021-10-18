@@ -1,6 +1,7 @@
 const {jwtService} = require('../service');
 const {userNormalizator} = require('../util/user.util');
 const {O_Auth} = require('../database');
+const {tokenType: {ACCESS}, responseStatusCode} = require('../config/constants');
 
 module.exports = {
     generateToken: async (req, res, next) => {
@@ -24,7 +25,9 @@ module.exports = {
 
     logout: async (req, res, next) => {
         try {
-            await res.json(`Hello ${req.body.email}`);
+            const token = req.token;
+            await O_Auth.deleteOne({[ACCESS]: token});
+            res.sendStatus(responseStatusCode.NO_DATA);
         } catch (e) {
             next(e);
         }

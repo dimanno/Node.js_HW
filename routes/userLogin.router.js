@@ -9,6 +9,6 @@ router.post('/',
     loginMiddleware.IsPasswordMatched,
     userLoginController.generateToken);
 router.post('/refresh', loginMiddleware.checkRefreshToken, userLoginController.generateToken);
-router.post('/logout', userLoginController.logout);
+router.post('/logout', loginMiddleware.checkAccessToken, userLoginController.logout);
 
 module.exports = router;
