@@ -1,4 +1,5 @@
 const ErrorHandler = require('../errors/errorHendler');
+const {responseStatusCode} = require('../config/constants');
 
 module.exports = {
     isDataValid: (validator) => (req, res, next) => {
@@ -6,7 +7,7 @@ module.exports = {
             const {error, value} = validator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(error.details[0].message);
+                throw new ErrorHandler(error.details[0].message, responseStatusCode.BAD_REQUEST);
             }
 
             req.body = value;
