@@ -7,7 +7,8 @@ router.post('/',
     loginMiddleware.isLoginValid,
     usersMiddleware.isUserPresentByEmail,
     loginMiddleware.IsPasswordMatched,
-    userLoginController.login);
+    userLoginController.generateToken);
+router.post('/refresh', loginMiddleware.checkRefreshToken, userLoginController.generateToken);
 router.post('/logout', userLoginController.logout);
 
 module.exports = router;

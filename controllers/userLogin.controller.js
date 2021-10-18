@@ -3,10 +3,9 @@ const {userNormalizator} = require('../util/user.util');
 const {O_Auth} = require('../database');
 
 module.exports = {
-    login: async (req, res, next) => {
+    generateToken: async (req, res, next) => {
         try {
             const userNormalize = userNormalizator(req.user);
-
             const tokenPair = jwtService.generateTokenPair();
 
             await O_Auth.create({
@@ -18,7 +17,6 @@ module.exports = {
                 user: userNormalize,
                 ...tokenPair
             });
-
         } catch (e) {
             next(e);
         }
