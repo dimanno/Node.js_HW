@@ -1,5 +1,4 @@
 const User = require('../database/User');
-const {userValidator: {updateUserValidator}} = require('../validators');
 const ErrorHandler = require('../errors/errorHendler');
 const {responseStatusCode, messagesResponse} = require('../config/constants');
 
@@ -48,22 +47,6 @@ module.exports = {
 
             req.body = user;
 
-            next();
-        } catch (e) {
-            next(e);
-        }
-    },
-
-    isUpdateDataValid: (req, res, next) => {
-        try {
-            const {name} = req.body;
-            const {error, value} = updateUserValidator.validate({name});
-
-            if (error) {
-                throw new ErrorHandler(error.details[0].message, responseStatusCode.BAD_REQUEST);
-            }
-
-            req.body = value;
             next();
         } catch (e) {
             next(e);

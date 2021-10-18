@@ -45,7 +45,7 @@ module.exports = {
             const {user_id} = req.params;
             const {name} = req.body;
 
-            await User.updateOne({_id: user_id}, {$set: {name}});
+            await User.updateOne({_id: user_id}, {set: {name}});
 
             res.status(responseStatusCode.CREATED).json(messagesResponse.UPDATE_USER);
         } catch (e) {
