@@ -8,13 +8,12 @@ const {tokenType:{ACCESS}} = require('../config/constants');
 
 
 router.post('/',
+    dataValidMiddleware.isDataValid(postValidator),
     loginMiddleware.checkToken(ACCESS),
     usersMiddleware.checkUserRole([
         ADMIN,
         MANAGER
     ]),
-    dataValidMiddleware.isDataValid(postValidator),
-    usersMiddleware.isUserExist,
     postController.addPost);
 router.get('/', postController.getPosts);
 

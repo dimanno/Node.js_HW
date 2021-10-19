@@ -5,11 +5,12 @@ module.exports = {
         try {
             const {title, body} = req.body;
             const user = req.user;
-
+            console.log(user._id);
             await Post.create({
                 title,
                 body,
-                user_id: user._id
+                user_id: user._id,
+                new: true
             });
 
             res.json(`post ${title} created`);

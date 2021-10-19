@@ -15,7 +15,6 @@ const addPostValidator = Joi.object({
         .required(),
     user_id: Joi
         .string()
-        .required()
 });
 
 module.exports = addPostValidator;
