@@ -39,7 +39,9 @@ module.exports = {
     isUserExist: async (req, res, next) => {
         try {
             const {user_id} = req.params;
-            const user = await User.findById(user_id).lean();
+            const userId_inPost = req.body.user_id;
+
+            const user = await User.findById(user_id || userId_inPost).lean();
 
             if (!user) {
                 throw new ErrorHandler(messagesResponse.USER_NOT_FOUND, responseStatusCode.NOT_FOUND);
@@ -61,6 +63,7 @@ module.exports = {
                 throw new ErrorHandler(messagesResponse.ACCESS_DENIED, responseStatusCode.FORBIDDEN);
             }
 
+            next();
         } catch (e) {
             next(e);
         }
