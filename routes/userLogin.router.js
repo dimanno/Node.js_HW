@@ -2,13 +2,16 @@ const router = require('express').Router();
 
 const {userLoginController} = require('../controllers');
 const {usersMiddleware, loginMiddleware} = require('../middlewares');
+const {tokenType:{ACCESS, REFRESH}} = require('../config/constants');
 
 router.post('/',
     loginMiddleware.isLoginValid,
     usersMiddleware.isUserPresentByEmail,
     loginMiddleware.IsPasswordMatched,
-    userLoginController.generateToken);
-router.post('/refresh', loginMiddleware.checkRefreshToken, userLoginController.generateToken);
-router.post('/logout', loginMiddleware.checkAccessToken, userLoginController.logout);
+    userLoginController.login);
+
+router.post('/refresh', loginMiddleware.checkToken(REFRESH), userLoginController.updateRefresh);
+router.post('/logout', loginMiddleware.checkToken(ACCESS), userLoginController.logout);
+router.post('/logout_all', loginMiddleware.checkToken(ACCESS), userLoginController.logoutAll);
 
 module.exports = router;

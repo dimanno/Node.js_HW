@@ -1,7 +1,7 @@
 const {compare} = require('../service/password.service');
 const {loginValidator: {userLoginValidator}} = require('../validators');
 const ErrorHandler = require('../errors/errorHendler');
-const {messagesResponse, responseStatusCode, tokenType} = require('../config/constants');
+const {messagesResponse, responseStatusCode} = require('../config/constants');
 const {jwtService} = require('../service');
 const {O_Auth} = require('../database');
 
@@ -33,55 +33,82 @@ module.exports = {
             next(e);
         }
     },
-    checkAccessToken: async (req, res, next) => {
+
+    checkToken: (tokenType) => async (req, res, next) => {
         try {
             const token = req.get('authorization');
 
-            if (!token) {
+            if(!token) {
                 throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
             }
 
-            await jwtService.verifyToken(token);
+            await jwtService.verifyToken(token, tokenType);
 
-            const tokenResponse = await O_Auth
-                .findOne({access_token: token})
+            const responseToken =await O_Auth
+                .findOne({[tokenType]: token})
                 .populate('user_id');
 
-            if (!tokenResponse) {
+            if (!responseToken) {
                 throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
             }
 
-            req.user = tokenResponse.user_id;
+            req.user = responseToken.user_id;
+            req.token = token;
+
             next();
         } catch (e) {
             next(e);
         }
     },
-
-    checkRefreshToken: async (req, res, next) => {
-        try {
-            const token = req.get('authorization');
-
-            if (!token) {
-                throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
-            }
-
-            await jwtService.verifyToken(token, tokenType.REFRESH);
-
-            const tokenResponse = await O_Auth
-                .findOne({refresh_token: token})
-                .populate('user_id');
-
-            if (!tokenResponse) {
-                throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
-            }
-
-            await O_Auth.deleteOne({refresh_token: token});
-
-            req.user = tokenResponse.user_id;
-            next();
-        } catch (e) {
-            next(e);
-        }
-    }
+    // checkAccessToken: async (req, res, next) => {
+    //     try {
+    //         const token = req.get('authorization');
+    //
+    //         if (!token) {
+    //             throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
+    //         }
+    //
+    //         await jwtService.verifyToken(token);
+    //
+    //         const tokenResponse = await O_Auth
+    //             .findOne({access_token: token})
+    //             .populate('user_id');
+    //
+    //         if (!tokenResponse) {
+    //             throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
+    //         }
+    //
+    //         req.user = tokenResponse.user_id;
+    //         next();
+    //     } catch (e) {
+    //         next(e);
+    //     }
+    // },
+    //
+    // checkRefreshToken: async (req, res, next) => {
+    //     try {
+    //         const token = req.get('authorization');
+    //
+    //         if (!token) {
+    //             throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
+    //         }
+    //
+    //         await jwtService.verifyToken(token, tokenType.REFRESH);
+    //
+    //         const tokenResponse = await O_Auth
+    //             .findOne({refresh_token: token})
+    //             .populate('user_id');
+    //
+    //         if (!tokenResponse) {
+    //             throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
+    //         }
+    //
+    //         await O_Auth.deleteOne({refresh_token: token});
+    //
+    //         req.user = tokenResponse.user_id;
+    //         next();
+    //     } catch (e) {
+    //         next(e);
+    //     }
+    // }
 };
