@@ -13,6 +13,9 @@ const addPostValidator = Joi.object({
         .max(9000)
         .trim()
         .required(),
+    user_id: Joi
+        .string()
+        .required()
 });
 
 module.exports = addPostValidator;

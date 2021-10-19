@@ -55,12 +55,13 @@ module.exports = {
 
     checkUserRole: (arrayRoles = []) => (req, res, next) => {
         try {
-            const {role} = req.body;
+            const {role} = req.user;
 
             if (!arrayRoles.includes(role)) {
                 throw new ErrorHandler(messagesResponse.ACCESS_DENIED, responseStatusCode.FORBIDDEN);
             }
 
+            next();
         } catch (e) {
             next(e);
         }

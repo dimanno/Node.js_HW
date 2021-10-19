@@ -1,13 +1,15 @@
 const Post = require('../database/Post');
 
-
 module.exports = {
     addPost: async (req, res, next) => {
         try {
             const {title, body} = req.body;
+            const user = req.user;
+
             await Post.create({
                 title,
                 body,
+                user_id: user._id
             });
 
             res.json(`post ${title} created`);

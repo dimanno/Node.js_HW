@@ -3,7 +3,8 @@ const router = require('express').Router();
 const {userController} = require('../controllers');
 const {usersMiddleware, dataValidMiddleware, loginMiddleware} = require('../middlewares');
 const {userValidator: {createUserValidator, updateUserValidator}} = require('../validators');
-const {tokenType:{ACCESS}} = require('../config/constants');
+const {tokenType: {ACCESS}} = require('../config/constants');
+const {userRoles: {ADMIN, MANAGER}} = require('../config/constants');
 
 router.get('/', userController.getUsers);
 router.post('/',
@@ -17,6 +18,12 @@ router.put('/:user_id',
     usersMiddleware.isUserExist,
     loginMiddleware.checkToken(ACCESS),
     userController.updateUser);
-router.delete('/:user_id', loginMiddleware.checkToken(ACCESS), userController.deleteUser);
+router.delete('/:user_id',
+    loginMiddleware.checkToken(ACCESS),
+    usersMiddleware.checkUserRole([
+        ADMIN,
+        MANAGER
+    ]),
+    userController.deleteUser);
 
 module.exports = router;
