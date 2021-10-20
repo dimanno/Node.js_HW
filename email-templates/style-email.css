@@ -1,0 +1,11 @@
+.footer {
+    border: green solid 2px;
+    border-radius: 20%;
+}
+.header {
+    background: silver;
+}
+
+header h2 {
+    color: green;
+}

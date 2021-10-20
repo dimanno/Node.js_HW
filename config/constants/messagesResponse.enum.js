@@ -7,5 +7,6 @@ module.exports = {
     UPDATE_USER: 'User is updated',
     USER_DELETED: 'User is delete',
     SUCCESSFUL_AUTH: (email) => `Hello ${email}`,
-    INVALID_TOKEN: 'Invalid token'
+    INVALID_TOKEN: 'Invalid token',
+    INVALID_TEMPLATE: 'Wrong template name'
 };
