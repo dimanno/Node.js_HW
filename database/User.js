@@ -28,6 +28,11 @@ const userSchema = new Schema({
         default: userRoles.USER,
         enum: Object.values(userRoles)
     },
+    isActive: {
+        type: Boolean,
+        default: false,
+        required: true
+    }
 }, {timestamps: true});
 
 module.exports = model('user', userSchema);
