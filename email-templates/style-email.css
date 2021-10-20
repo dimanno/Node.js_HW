@@ -1,11 +1,15 @@
 .footer {
     border: green solid 2px;
-    border-radius: 20%;
+    border-radius: 30px;
+    text-align: center;
+    padding: 7px;
 }
 .header {
     background: silver;
+    padding: 2px;
+
 }
 
-header h2 {
+.header h2 {
     color: green;
 }

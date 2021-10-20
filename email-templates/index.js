@@ -1,11 +1,13 @@
+const {email_actions} = require('../config/constants');
+
 module.exports = {
-    'welcome': {
+    [email_actions.WELCOME]: {
         templateName: 'welcome',
         subject: 'Welcome!'
     },
 
-    'order_service': {
+    [email_actions.ORDER_SERVICE]: {
         templateName: 'order_service',
         subject: 'Your order!'
     }
-}
+};

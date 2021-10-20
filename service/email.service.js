@@ -20,20 +20,20 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-const sendMail = async (userMail, emailAction, ) => {
+const sendMail = async (userMail, emailAction, context = {}) => {
     const templateInfo = allTemplates[emailAction];
 
     if (!templateInfo) {
         throw new ErrorHandler(messagesResponse.INVALID_TEMPLATE, responseStatusCode.BAD_REQUEST);
     }
 
-    // const html = await templateParser.render(templateInfo.templateName, context);
+    const html = await templateParser.render(templateInfo.templateName, context);
 
     return transporter.sendMail({
         from: 'No reply',
         to: userMail,
         subject: templateInfo.subject,
-        html: 'Hello World!!!!!!'
+        html
     });
 };
 
