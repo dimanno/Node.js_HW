@@ -1,7 +1,7 @@
 const {jwtService} = require('../service');
 const {userNormalizator} = require('../util/user.util');
-const {O_Auth} = require('../database');
-const {tokenType: {ACCESS, REFRESH}, responseStatusCode} = require('../config/constants');
+const {O_Auth, User} = require('../database');
+const {tokenTypeEnum: {ACCESS, REFRESH}, responseStatusCode, messagesResponse} = require('../config/constants');
 
 
 module.exports = {
@@ -56,6 +56,17 @@ module.exports = {
             );
 
             res.json(newPair);
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    activateUser: async (req, res, next) => {
+        try {
+            const {_id} = req.user;
+            await User.updateOne({_id}, {isActive: true});
+
+            res.status(200).json(messagesResponse.ACTIVE_USER);
         } catch (e) {
             next(e);
         }

@@ -3,11 +3,11 @@ const router = require('express').Router();
 const {postController} = require('../controllers');
 const {dataValidMiddleware, usersMiddleware, loginMiddleware} = require('../middlewares');
 const {postValidator} = require('../validators/');
-const {userRoles: {ADMIN, MANAGER}, tokenType} = require('../config/constants');
+const {userRoles: {ADMIN, MANAGER}, tokenTypeEnum} = require('../config/constants');
 
 
 router.post('/',
-    loginMiddleware.checkToken(tokenType.ACCESS),
+    loginMiddleware.checkToken(tokenTypeEnum.ACCESS),
     usersMiddleware.checkUserRole([
         ADMIN,
         MANAGER

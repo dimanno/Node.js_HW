@@ -1,4 +1,6 @@
 extends container
 block content
     h3 Hello #{userName}
-    p Test welcome email
+    p Welcome to our team!
+    p For activate click link bellow
+    a(href=(`http://localhost:5002/auth/activate/${token}`)) click here

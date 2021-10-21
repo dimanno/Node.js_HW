@@ -67,5 +67,19 @@ module.exports = {
         } catch (e) {
             next(e);
         }
+    },
+
+    isUserActive: (req, res, next) => {
+        try {
+            const {user} = req;
+
+            if(!user.isActive) {
+                throw new ErrorHandler(messagesResponse.NOT_ACTIVE, responseStatusCode.FORBIDDEN);
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
     }
 };

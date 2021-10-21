@@ -1,8 +1,9 @@
 module.exports = {
+    const: require('./const'),
     email_actions: require('./email-actions.enum'),
     messagesResponse: require('./messagesResponse.enum'),
     regex: require('./regular.expressions'),
     responseStatusCode: require('./responsStatusCode'),
-    tokenType: require('./tokenType.enum'),
+    tokenTypeEnum: require('./tokenType.enum'),
     userRoles: require('./userRoles.enum')
 };

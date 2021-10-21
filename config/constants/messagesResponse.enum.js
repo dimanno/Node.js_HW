@@ -1,4 +1,5 @@
 module.exports = {
+    ACTIVE_USER: 'User is active',
     USER_EXISTS: 'Email already exist',
     WRONG_LOGIN_DATA: 'Wrong email or password',
     USER_NOT_FOUND: 'User does not exist',
@@ -8,5 +9,6 @@ module.exports = {
     USER_DELETED: 'User is delete',
     SUCCESSFUL_AUTH: (email) => `Hello ${email}`,
     INVALID_TOKEN: 'Invalid token',
-    INVALID_TEMPLATE: 'Wrong template name'
+    INVALID_TEMPLATE: 'Wrong template name',
+    NOT_ACTIVE: 'User is not active'
 };
