@@ -59,7 +59,7 @@ module.exports = {
 
     deleteUser: async (req, res, next) => {
         try {
-            const {id} = req.user._id;
+            const {id} = req.user;
             await User.findByIdAndDelete(id);
             await O_Auth.deleteOne({user_id:id});
 

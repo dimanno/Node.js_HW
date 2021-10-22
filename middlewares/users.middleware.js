@@ -41,9 +41,10 @@ module.exports = {
             const {user_id} = req.params;
             const userId_inPost = req.body.user_id;
 
+
             const user = await User.findById(user_id || userId_inPost).lean();
 
-            if (!user) {
+            if (!user && user_id || !user && userId_inPost) {
                 throw new ErrorHandler(messagesResponse.USER_NOT_FOUND, responseStatusCode.NOT_FOUND);
             }
 

@@ -27,7 +27,7 @@ module.exports = {
                 throw new ErrorHandler(messagesResponse.WRONG_LOGIN_DATA, responseStatusCode.NOT_FOUND);
             }
 
-            req.body =value;
+            req.body = value;
             next();
         } catch (e) {
             next(e);
@@ -36,6 +36,7 @@ module.exports = {
     checkToken: (tokenType) => async (req, res, next) => {
         try {
             const token = req.get(AUTHORIZATION);
+            console.log(token);
 
             if(!token) {
                 throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
@@ -44,8 +45,9 @@ module.exports = {
             await jwtService.verifyToken(token, tokenType);
 
             const responseToken = await O_Auth
-                .findOne({[tokenType]: token})
+                .findOne({tokenType: token})
                 .populate('user_id');
+            console.log(responseToken);
 
             if (!responseToken) {
                 throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);

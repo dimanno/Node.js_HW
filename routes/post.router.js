@@ -8,10 +8,10 @@ const {userRoles: {ADMIN, MANAGER}, tokenTypeEnum} = require('../config/constant
 
 router.post('/',
     loginMiddleware.checkToken(tokenTypeEnum.ACCESS),
-    usersMiddleware.checkUserRole([
-        ADMIN,
-        MANAGER
-    ]),
+    // usersMiddleware.checkUserRole([
+    //     ADMIN,
+    //     MANAGER
+    // ]),
     dataValidMiddleware.isDataValid(postValidator),
     postController.addPost);
 router.get('/', postController.getPosts);
