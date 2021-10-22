@@ -10,7 +10,7 @@ router.post('/',
     usersMiddleware.createUserMiddleware,
     userController.createUser);
 
-router.use(loginMiddleware.checkToken(ACCESS), usersMiddleware.isUserActive);
+// router.use(loginMiddleware.checkToken(ACCESS), usersMiddleware.isUserActive);
 
 router.get('/', userController.getUsers);
 

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const ErrorHandler = require('../errors/errorHendler');
-const {responseStatusCode: {INVALID_CLIENT}} = require('../config/constants');
+const {responseStatusCode: {INVALID_CLIENT}, messagesResponse} = require('../config/constants');
 const {JWT_ACCESS_SECRET, JWT_REFRESH_SECRET, JWT_ACTIVATE_SECRET} = require('../config/config');
 const {tokenTypeEnum} = require('../config/constants');
 
@@ -32,7 +32,7 @@ module.exports = {
             }
             await jwt.verify(token, secret);
         } catch (e) {
-            throw new ErrorHandler('invalid token', INVALID_CLIENT);
+            throw new ErrorHandler(messagesResponse.INVALID_TOKEN, INVALID_CLIENT);
         }
     },
     createActiveToken: () => jwt.sign({}, JWT_ACTIVATE_SECRET, {expiresIn: '1d'})

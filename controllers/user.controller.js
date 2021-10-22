@@ -1,4 +1,4 @@
-const {User, Active_token} = require('../database');
+const {User, Active_token,O_Auth} = require('../database');
 const {passwordService, emailService, jwtService} = require('../service');
 const {userNormalizator} = require('../util/user.util');
 const {responseStatusCode, messagesResponse, email_actions, tokenTypeEnum} = require('../config/constants');
@@ -46,9 +46,10 @@ module.exports = {
     updateUser: async (req, res, next) => {
         try {
             const {user_id} = req.params;
-            const {name} = req.body;
+            const {name, email} = req.body;
 
             await User.updateOne({_id: user_id}, {set: {name}});
+            await emailService.sendMail(email, email_actions.UPDATE_ACCOUNT, {userName: name});
 
             res.status(responseStatusCode.CREATED).json(messagesResponse.UPDATE_USER);
         } catch (e) {
@@ -58,8 +59,9 @@ module.exports = {
 
     deleteUser: async (req, res, next) => {
         try {
-            const {user_id} = req.params;
-            await User.findByIdAndDelete(user_id);
+            const {id} = req.user._id;
+            await User.findByIdAndDelete(id);
+            await O_Auth.deleteOne({user_id:id});
 
             res.sendStatus(responseStatusCode.NO_DATA);
         } catch (e) {

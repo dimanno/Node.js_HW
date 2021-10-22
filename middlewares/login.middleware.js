@@ -60,7 +60,7 @@ module.exports = {
         }
     },
 
-    checkActivateToken: async (req,res,next) => {
+    checkActivateToken: async (req, res, next) => {
         try {
             const token = req.params;
 
@@ -69,9 +69,9 @@ module.exports = {
                 .findOne({token, type: tokenTypeEnum.ACTION})
                 .populate('user_id');
 
-            // if (!user) {
-            //     throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
-            // }
+            if (!user) {
+                throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
+            }
 
             await Active_token.deleteOne({_id});
             req.user = user;
