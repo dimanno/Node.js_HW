@@ -1,7 +1,7 @@
 const {compare} = require('../service/password.service');
 const {loginValidator: {userLoginValidator}} = require('../validators');
 const ErrorHandler = require('../errors/errorHendler');
-const {messagesResponse, responseStatusCode, const:{AUTHORIZATION}, tokenTypeEnum} = require('../config/constants');
+const {messagesResponse, responseStatusCode, const: {AUTHORIZATION}, tokenTypeEnum} = require('../config/constants');
 const {jwtService} = require('../service');
 const {O_Auth, Active_token} = require('../database');
 
@@ -38,15 +38,46 @@ module.exports = {
             const token = req.get(AUTHORIZATION);
             console.log(token);
 
-            if(!token) {
+            if (!token) {
                 throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
             }
 
             await jwtService.verifyToken(token, tokenType);
+            console.log(token);
 
             const responseToken = await O_Auth
-                .findOne({tokenType: token})
-                .populate('user_id');
+                .findOne({tokenType: token});
+            // .populate('user_id');
+            console.log(responseToken);
+
+            if (!responseToken) {
+                throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
+            }
+
+            req.user = responseToken.user_id;
+            req.token = token;
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    checkTokenAc: async (req, res, next) => {
+        try {
+            const token = req.get(AUTHORIZATION);
+            console.log(token);
+
+            if (!token) {
+                throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
+            }
+
+            await jwtService.verifyToken(token, tokenTypeEnum.ACCESS);
+            console.log(token);
+
+            const responseToken = await O_Auth
+                .findOne({access_token: token});
+                // .populate('user_id');
             console.log(responseToken);
 
             if (!responseToken) {
@@ -67,7 +98,7 @@ module.exports = {
             const token = req.params;
 
             await jwtService.verifyToken(token, tokenTypeEnum.ACTION);
-            const {user_id:user, _id} = await Active_token
+            const {user_id: user, _id} = await Active_token
                 .findOne({token, type: tokenTypeEnum.ACTION})
                 .populate('user_id');
 

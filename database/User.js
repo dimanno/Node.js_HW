@@ -33,6 +33,6 @@ const userSchema = new Schema({
         default: false,
         required: true
     }
-}, {timestamps: true});
+}, {timestamps: true, toObject: {virtuals:true}, toJSON: {virtuals: true}});
 
 module.exports = model('user', userSchema);
