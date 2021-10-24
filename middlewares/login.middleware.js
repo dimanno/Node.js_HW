@@ -1,9 +1,9 @@
 const {compare} = require('../service/password.service');
 const {loginValidator: {userLoginValidator}} = require('../validators');
 const ErrorHandler = require('../errors/errorHendler');
-const {messagesResponse, responseStatusCode, const: {AUTHORIZATION}, tokenTypeEnum} = require('../config/constants');
+const {messagesResponse, responseStatusCode, const: {AUTHORIZATION}, actionTokens} = require('../config/constants');
 const {jwtService} = require('../service');
-const {O_Auth, Active_token} = require('../database');
+const {O_Auth, Action_tokens} = require('../database');
 
 module.exports = {
 
@@ -33,52 +33,20 @@ module.exports = {
             next(e);
         }
     },
+
     checkToken: (tokenType) => async (req, res, next) => {
         try {
             const token = req.get(AUTHORIZATION);
-            console.log(token);
 
             if (!token) {
                 throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
             }
 
             await jwtService.verifyToken(token, tokenType);
-            console.log(token);
 
             const responseToken = await O_Auth
-                .findOne({tokenType: token});
-            // .populate('user_id');
-            console.log(responseToken);
-
-            if (!responseToken) {
-                throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
-            }
-
-            req.user = responseToken.user_id;
-            req.token = token;
-
-            next();
-        } catch (e) {
-            next(e);
-        }
-    },
-
-    checkTokenAc: async (req, res, next) => {
-        try {
-            const token = req.get(AUTHORIZATION);
-            console.log(token);
-
-            if (!token) {
-                throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
-            }
-
-            await jwtService.verifyToken(token, tokenTypeEnum.ACCESS);
-            console.log(token);
-
-            const responseToken = await O_Auth
-                .findOne({access_token: token});
-                // .populate('user_id');
-            console.log(responseToken);
+                .findOne({[tokenType]: token})
+                .populate('user_id');
 
             if (!responseToken) {
                 throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
@@ -97,16 +65,16 @@ module.exports = {
         try {
             const token = req.params;
 
-            await jwtService.verifyToken(token, tokenTypeEnum.ACTION);
-            const {user_id: user, _id} = await Active_token
-                .findOne({token, type: tokenTypeEnum.ACTION})
+            await jwtService.verifyToken({token}, actionTokens.ACTIVATE_USER);
+            const {user_id: user, _id} = await Action_tokens
+                .findOne({token, type: actionTokens.ACTIVATE_USER})
                 .populate('user_id');
 
             if (!user) {
                 throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.INVALID_CLIENT);
             }
 
-            await Active_token.deleteOne({_id});
+            await Action_tokens.deleteOne({_id});
             req.user = user;
             next();
         } catch (e) {

@@ -1,5 +1,5 @@
-const {User, Active_token,O_Auth} = require('../database');
-const {passwordService, emailService, jwtService} = require('../service');
+const {User, Active_token, O_Auth} = require('../database');
+const {emailService, jwtService} = require('../service');
 const {userNormalizator} = require('../util/user.util');
 const {responseStatusCode, messagesResponse, email_actions, tokenTypeEnum} = require('../config/constants');
 
@@ -9,8 +9,7 @@ module.exports = {
             const users = await User.find({}).lean();
 
             const newUsers = users.map(user => userNormalizator(user));
-
-            res.json(newUsers);
+            newUsers.res.json(newUsers);
         } catch (e) {
             next(e);
         }
@@ -27,10 +26,10 @@ module.exports = {
 
     createUser: async (req, res, next) => {
         try {
-            const {password, name, email} = req.body;
-            const hashedPassword = await passwordService.hash(password);
+            const {name, email} = req.body;
 
-            const newUser = await User.create({...req.body, password: hashedPassword});
+
+            const newUser = await User.createUserWithHashPassword(req.body);
             const userNormalise = userNormalizator(newUser.toJSON());
             const token = jwtService.createActiveToken();
 
@@ -48,7 +47,7 @@ module.exports = {
             const {user_id} = req.params;
             const {name, email} = req.body;
 
-            await User.updateOne({_id: user_id}, {set: {name}});
+            await User.findByIdAndUpdate(user_id, {name}, {new: true});
             await emailService.sendMail(email, email_actions.UPDATE_ACCOUNT, {userName: name});
 
             res.status(responseStatusCode.CREATED).json(messagesResponse.UPDATE_USER);
@@ -57,12 +56,12 @@ module.exports = {
         }
     },
 
-    deleteUser: async (req, res, next) => {
+    deleteAccount: async (req, res, next) => {
         try {
-            const id = req.user._id;
-            console.log(id);
-            await User.deleteOne(id);
-            await O_Auth.deleteOne({user_id:id});
+            const {_id} = req.user;
+            console.log(_id);
+            await User.deleteOne({_id});
+            await O_Auth.deleteOne({user_id: _id});
 
             res.sendStatus(responseStatusCode.NO_DATA);
         } catch (e) {

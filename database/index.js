@@ -1,5 +1,5 @@
 module.exports = {
-    Active_token: require('./Active_token'),
+    Action_tokens: require('./Action_tokens'),
     O_Auth: require('./O_auth'),
     Post: require('./Post'),
     User: require('./User')

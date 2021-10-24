@@ -7,17 +7,16 @@ const {tokenTypeEnum: {ACCESS, REFRESH}, responseStatusCode, messagesResponse} =
 module.exports = {
     login: async (req, res, next) => {
         try {
-            const user = req.user;
-            const userNormalize = userNormalizator(user);
+            const user = userNormalizator(req.user);
             const tokenPair = jwtService.generateTokenPair();
 
             await O_Auth.create({
                 ...tokenPair,
-                user_id: userNormalize._id
+                user_id: user._id
             });
 
             res.json({
-                user: userNormalize,
+                user,
                 ...tokenPair
             });
         } catch (e) {

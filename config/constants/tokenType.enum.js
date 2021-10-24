@@ -1,5 +1,5 @@
 module.exports = {
-    ACCESS: 'access',
-    REFRESH: 'refresh',
-    ACTION: 'action'
+    ACCESS: 'access_token',
+    REFRESH: 'refresh_token',
+    ACTION: 'action_token'
 };

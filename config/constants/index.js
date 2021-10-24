@@ -5,5 +5,6 @@ module.exports = {
     regex: require('./regular.expressions'),
     responseStatusCode: require('./responsStatusCode'),
     tokenTypeEnum: require('./tokenType.enum'),
-    userRoles: require('./userRoles.enum')
+    userRoles: require('./userRoles.enum'),
+    actionTokens: require('./actionTokens.enum')
 };

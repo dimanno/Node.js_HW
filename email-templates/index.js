@@ -20,5 +20,4 @@ module.exports = {
         templateName: 'addPost',
         subject: 'your new post!'
     },
-
 };

@@ -19,6 +19,6 @@ router.put('/:user_id',
     dataValidMiddleware.isDataValid(updateUserValidator),
     usersMiddleware.isUserExist,
     userController.updateUser);
-router.delete('/:user_id', loginMiddleware.checkToken(ACCESS), userController.deleteUser);
+router.delete('/:user_id', loginMiddleware.checkToken(ACCESS), userController.deleteAccount);
 
 module.exports = router;

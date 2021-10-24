@@ -17,8 +17,10 @@ const oAuthSchema = new Schema({
         ref: 'user'
     }
 }, {timestamps: true, toObject: {virtuals: true}, toJSON: {virtuals: true}});
+
 // huk Pre
-/*oAuthSchema.pre('findOne', function() {
-    this.populate('user_id');*/
+// oAuthSchema.pre('findOne', function() {
+//     this.populate('user_id');
+// });
 
 module.exports = model('o_auth', oAuthSchema);
