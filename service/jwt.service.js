@@ -1,11 +1,17 @@
 const jwt = require('jsonwebtoken');
 
 const ErrorHandler = require('../errors/errorHendler');
-const {responseStatusCode: {INVALID_CLIENT}, messagesResponse, actionTokens, responseStatusCode} = require('../config/constants');
-const {JWT_ACCESS_SECRET,
+const {
+    responseStatusCode: {INVALID_CLIENT},
+    messagesResponse,
+    actionTokens,
+} = require('../config/constants');
+const {
+    JWT_ACCESS_SECRET,
     JWT_REFRESH_SECRET,
     JWT_ACTIVATE_SECRET,
-    JWT_FORGOT_PASSWORD_SECRET} = require('../config/config');
+    JWT_FORGOT_PASSWORD_SECRET
+} = require('../config/config');
 const {tokenTypeEnum} = require('../config/constants');
 
 module.exports = {
@@ -17,8 +23,8 @@ module.exports = {
             access_token,
             refresh_token
         };
-
     },
+
     verifyToken: async (token, tokenType = tokenTypeEnum.ACCESS) => {
         try {
             let secret = '';
@@ -32,13 +38,17 @@ module.exports = {
                 case actionTokens.ACTIVATE_USER:
                     secret = JWT_ACTIVATE_SECRET;
                     break;
+                case actionTokens.FORGOT_PASSWORD:
+                    secret = JWT_FORGOT_PASSWORD_SECRET;
+                    break;
             }
             await jwt.verify(token, secret);
         } catch (e) {
             throw new ErrorHandler(messagesResponse.INVALID_TOKEN, INVALID_CLIENT);
         }
     },
-    createActiveToken: (tokenType) => {
+
+    createActionToken: (payload, tokenType) => {
         let secret = '';
         switch (tokenType) {
             case actionTokens.ACTIVATE_USER:
@@ -47,9 +57,7 @@ module.exports = {
             case actionTokens.FORGOT_PASSWORD:
                 secret = JWT_FORGOT_PASSWORD_SECRET;
                 break;
-            default:
-                throw new ErrorHandler(messagesResponse.INVALID_TOKEN, responseStatusCode.SERVER)
         }
-        jwt.sign({}, secret, {expiresIn: '1d'});
+        return jwt.sign({}, secret, {expiresIn: '1d'});
     }
 };

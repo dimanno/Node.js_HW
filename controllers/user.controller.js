@@ -1,7 +1,7 @@
-const {User, Active_token, O_Auth} = require('../database');
+const {User, O_Auth, Action_tokens} = require('../database');
 const {emailService, jwtService} = require('../service');
 const {userNormalizator} = require('../util/user.util');
-const {responseStatusCode, messagesResponse, email_actions, tokenTypeEnum} = require('../config/constants');
+const {responseStatusCode, messagesResponse, email_actions, actionTokens} = require('../config/constants');
 
 module.exports = {
     getUsers: async (req, res, next) => {
@@ -28,13 +28,16 @@ module.exports = {
         try {
             const {name, email} = req.body;
 
-
             const newUser = await User.createUserWithHashPassword(req.body);
             const userNormalise = userNormalizator(newUser.toJSON());
-            const token = jwtService.createActiveToken();
+            const activate_token = jwtService.createActionToken({email}, actionTokens.ACTIVATE_USER);
 
-            await Active_token.create({token, type: tokenTypeEnum.ACTION, user_id: userNormalise._id});
-            await emailService.sendMail(email, email_actions.WELCOME, {userName: name, token});
+            await Action_tokens.create({
+                token: activate_token,
+                type: actionTokens.ACTIVATE_USER,
+                user_id: userNormalise._id});
+
+            await emailService.sendMail(email, email_actions.WELCOME, {userName: name, activate_token});
 
             res.status(responseStatusCode.CREATED).json(userNormalise);
         } catch (e) {

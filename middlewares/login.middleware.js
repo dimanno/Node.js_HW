@@ -61,13 +61,13 @@ module.exports = {
         }
     },
 
-    checkActivateToken: async (req, res, next) => {
+    checkActionToken: async (req, res, next) => {
         try {
             const token = req.params;
 
-            await jwtService.verifyToken({token}, actionTokens.ACTIVATE_USER);
+            await jwtService.verifyToken({token}, actionTokens);
             const {user_id: user, _id} = await Action_tokens
-                .findOne({token, type: actionTokens.ACTIVATE_USER})
+                .findOne({token, type: actionTokens})
                 .populate('user_id');
 
             if (!user) {

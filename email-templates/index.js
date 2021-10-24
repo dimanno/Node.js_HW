@@ -20,4 +20,14 @@ module.exports = {
         templateName: 'addPost',
         subject: 'your new post!'
     },
+
+    [email_actions.FORGOT_PASSWORD]: {
+        templateName: 'forgot.password',
+        subject: 'Every body forgot something. Dont worry'
+    },
+
+    [email_actions.SET_NEW_PASSWORD]: {
+        templateName: 'change.password',
+        subject: 'Your password has been changed'
+    },
 };

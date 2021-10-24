@@ -14,7 +14,45 @@ const userLoginValidator = Joi.object({
         .required()
 });
 
+const emailValidator = Joi.object({
+    email: Joi
+        .string()
+        .regex(EMAIL_REGEXP)
+        .lowercase()
+        .required(),
+});
+
+const passwordValidator = Joi.object({
+    password: Joi
+        .string()
+        .regex(PASSWORD_REGEXP)
+        .min(8)
+        .max(128)
+        .trim()
+        .required()
+});
+
+const changePasswordValidator = Joi.object({
+    oldPassword: Joi
+        .string()
+        .regex(PASSWORD_REGEXP)
+        .min(8)
+        .max(128)
+        .trim()
+        .required(),
+    newPassword: Joi
+        .string()
+        .regex(PASSWORD_REGEXP)
+        .min(8)
+        .max(128)
+        .trim()
+        .required()
+});
+
 module.exports = {
-    userLoginValidator
+    userLoginValidator,
+    emailValidator,
+    passwordValidator,
+    changePasswordValidator
 };
 

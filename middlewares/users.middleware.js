@@ -9,7 +9,7 @@ module.exports = {
             const userByEmail = await User.findOne({email});
 
             if (userByEmail) {
-                throw new ErrorHandler(messagesResponse.USER_EXISTS, responseStatusCode.FORBIDDEN);
+                throw new ErrorHandler(messagesResponse.DATA_EXIST, responseStatusCode.FORBIDDEN);
             }
 
             next();

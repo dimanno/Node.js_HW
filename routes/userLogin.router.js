@@ -10,7 +10,7 @@ router.post('/',
     loginMiddleware.IsPasswordMatched,
     userLoginController.login);
 
-router.get('/activate/:token', loginMiddleware.checkActivateToken, userLoginController.activateUser);
+router.get('/activate/:token', loginMiddleware.checkActionToken, userLoginController.activateUser);
 router.post('/refresh', loginMiddleware.checkToken(REFRESH), userLoginController.updateRefresh);
 router.post('/logout', loginMiddleware.checkToken(ACCESS), userLoginController.logout);
 router.post('/logout_all', loginMiddleware.checkToken(ACCESS), userLoginController.logoutAll);

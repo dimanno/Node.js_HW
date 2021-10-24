@@ -35,11 +35,12 @@ const userSchema = new Schema({
         required: true
     }
 }, {timestamps: true, toObject: {virtuals: true}, toJSON: {virtuals: true}});
+
 //virtual field only for(instance Document Class from Mongoose)
-userSchema.virtual('userRole').get(function(){
-    console.log('test');
+userSchema.virtual('userRole').get(function() {
     return `${this.role} ${this.name}`;
 });
+
 // For example : methods use for only single records (instance Document Class from Mongoose)
 userSchema.methods = {
     normalize(userNormalize = {}) {
@@ -50,11 +51,16 @@ userSchema.methods = {
         });
 
         return userNormalize;
-    }
+    },
+
+    comparePassword(password) {
+        return passwordService.compare(password, this.password);
+    },
 };
+
 // Statics use for quite model (User.testStatic)
 userSchema.statics = {
-    async createUserWithHashPassword(userObject){
+    async createUserWithHashPassword(userObject) {
         const hashPassword = await passwordService.hash(userObject.password);
 
         return this.create({...userObject, password: hashPassword});
