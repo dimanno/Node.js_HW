@@ -68,7 +68,7 @@ module.exports = {
             if (tokenActionType === actionTokens.ACTIVATE_USER) {
                 token = req.params.token;
             }
-            console.log(token);
+
             await jwtService.verifyToken({token}, tokenActionType);
             const {user_id: user, _id} = await Action_tokens
                 .findOne({token, type: tokenActionType})
