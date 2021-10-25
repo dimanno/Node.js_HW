@@ -4,7 +4,7 @@ const {passwordController} = require('../controllers');
 const {dataValidMiddleware, universalMiddlewares, loginMiddleware} = require('../middlewares');
 const {loginValidator:{emailValidator, passwordValidator, changePasswordValidator}} = require('../validators');
 const {User} = require('../database');
-const {tokenTypeEnum:{ACCESS}} = require('../config/constants');
+const {tokenTypeEnum:{ACCESS}, actionTokens: {FORGOT_PASSWORD}} = require('../config/constants');
 
 router.post('/',
     dataValidMiddleware.isDataValid(changePasswordValidator),
@@ -16,7 +16,7 @@ router.post('/forgot',
     passwordController.sendEmailForgotPassword);
 router.put('/forgot',
     dataValidMiddleware.isDataValid(passwordValidator),
-    loginMiddleware.checkActionToken,
+    loginMiddleware.checkActionToken(FORGOT_PASSWORD),
     passwordController.setPassword);
 
 module.exports = router;
