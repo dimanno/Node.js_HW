@@ -9,7 +9,7 @@ module.exports = {
             const users = await User.find({}).lean();
 
             const newUsers = users.map(user => userNormalizator(user));
-            newUsers.res.json(newUsers);
+            await res.json(newUsers);
         } catch (e) {
             next(e);
         }
