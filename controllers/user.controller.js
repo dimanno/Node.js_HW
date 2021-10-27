@@ -2,11 +2,12 @@ const {User, O_Auth, Action_tokens} = require('../database');
 const {emailService, jwtService} = require('../service');
 const {userNormalizator} = require('../util/user.util');
 const {responseStatusCode, messagesResponse, email_actions, actionTokens} = require('../config/constants');
+const userService =require('../service/user.service');
 
 module.exports = {
     getUsers: async (req, res, next) => {
         try {
-            const users = await User.find({}).lean();
+            const users = await userService.getAllUsers(req.query).lean();
 
             const newUsers = users.map(user => userNormalizator(user));
             await res.json(newUsers);

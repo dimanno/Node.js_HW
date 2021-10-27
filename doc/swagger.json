@@ -1,0 +1,147 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Users.app",
+    "description": "This is a simple project for practice Node.js",
+    "contact": {
+      "email": "dimanno.dev@gmail.com",
+      "name": "Dmytro",
+      "url": "https://github.com/dimanno"
+    }
+  },
+  "host": "localhost:5002",
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "add new user to app",
+        "description": "get array users",
+        "operationId": "addUser",
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "name",
+            "description": "User name",
+            "required": true,
+            "type": "string",
+            "default": "Dimas"
+          },
+          {
+            "in": "formData",
+            "name": "email",
+            "description": "User email",
+            "required": true,
+            "type": "string",
+            "default": "bar@gmail.com"
+          },
+          {
+            "in": "formData",
+            "name": "password",
+            "description": "User password",
+            "required": true,
+            "type": "string",
+            "default": "12345Az$"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User was created",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/UserBody"
+            }
+          },
+          "400": {
+            "description": "Just an error",
+            "schema": {
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "code": {
+                  "type": "number",
+                  "example": 400
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "get all users",
+        "description": "get array users",
+        "operationId": "getUsers",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "description": "get users",
+            "required": false,
+            "type": "number",
+            "default": 1
+          },
+          {
+            "in": "formData",
+            "name": "perPage",
+            "required": false,
+            "type": "number",
+            "default": 20
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All users",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserBody"
+              }
+            }
+          },
+          "400": {
+            "description": "Just an error",
+            "schema": {
+              "properties": {
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "code": {
+                  "type": "number",
+                  "example": 400
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "UserBody": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "12345query",
+          "description": "mongoDB ID"
+        },
+        "email": {
+          "type": "string",
+          "example": "bar@gmail.com"
+        },
+        "name": {
+          "type": "string",
+          "example": "Dimas",
+          "description": "User name"
+        }
+      }
+    }
+  }
+}

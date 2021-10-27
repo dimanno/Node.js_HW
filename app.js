@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const swaggerUi = require('swagger-ui-express');
 
 require('dotenv').config();
 
@@ -12,6 +13,7 @@ const {responseStatusCode: {SERVER}} = require('./config/constants');
 const ErrorHandler = require('./errors/errorHendler');
 const checkDefaultData = require('./util/defoult.data.utill');
 const startCrone = require('./cron');
+const swaggerJson = require('./doc/swagger.json');
 
 const app = express();
 
@@ -33,10 +35,12 @@ if (NODE_ENV === 'dev') {
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-app.use('/users', userRouter);
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerJson));
 app.use('/auth', authRouter);
-app.use('/post', postRouter);
 app.use('/password', passwordRouter);
+app.use('/post', postRouter);
+app.use('/users', userRouter);
+
 // eslint-disable-next-line no-unused-vars
 app.use('*', (err, req, res, next) => {
     res
