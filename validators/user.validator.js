@@ -23,6 +23,7 @@ const createUserValidator = Joi.object({
     role: Joi
         .string()
         .allow(...Object.values(userRoles)),
+    age: Joi.number()
 });
 
 const updateUserValidator = Joi.object({
