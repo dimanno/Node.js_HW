@@ -14,8 +14,11 @@ module.exports = {
     NO_REPLY_EMAIL: process.env.NO_REPLY_EMAIL,
     NO_REPLY_EMAIL_PASSWORD:process.env.NO_REPLY_EMAIL_PASSWORD,
 
-    DEFAULT_ADMIN_PASSWORD:process.env.DEFAULT_ADMIN_PASSWORD
+    DEFAULT_ADMIN_PASSWORD:process.env.DEFAULT_ADMIN_PASSWORD,
 
-
+    AWS_S3_REGION: process.env.AWS_S3_REGION,
+    AWS_S3_NAME: process.env.AWS_S3_NAME,
+    AWS_S3_ACCESS: process.env.AWS_S3_ACCESS,
+    AWS_S3_SECRET: process.env.AWS_S3_SECRET
 };
 

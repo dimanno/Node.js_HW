@@ -1,4 +1,5 @@
 const express = require('express');
+const fileApload = require('express-fileupload');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
@@ -17,7 +18,9 @@ const swaggerJson = require('./doc/swagger.json');
 
 const app = express();
 
-mongoose.connect(MONGO_CONNECT_URI);
+mongoose.connect(MONGO_CONNECT_URI).then(()=>{
+    console.log('mongo connect successfully');
+});
 
 app.use(helmet());
 app.use(cors({origin: _configCors}));
@@ -32,6 +35,7 @@ if (NODE_ENV === 'dev') {
     app.use(morgan('dev'));
 }
 
+app.use(fileApload({}));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 

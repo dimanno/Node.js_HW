@@ -4,6 +4,7 @@ const {responseStatusCode: {BAD_REQUEST}} = require('../config/constants');
 module.exports = {
     isDataValid: (validator) => (req, res, next) => {
         try {
+            console.log(req.file);
             const {error, value} = validator.validate(req.body);
 
             if (error) {
