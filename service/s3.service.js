@@ -15,7 +15,7 @@ const bucket = new S3({
 
 module.exports = {
     uploadImage: (file) => {
-        console.log(file);
+        // console.log(file);
 
         // return bucket
         //     .upload({
